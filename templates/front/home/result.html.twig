@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page des 3 derniers livres_BUILDER{% endblock %}
+
+{% block body %}
+    <h1> {%block pageTitle %} Nos 3 derniers livres {% endblock %} </h1>
+    <hr/>
+
+    {% block subTitle %} {% endblock %}
+
+    {% for book in books %}
+    <div>
+        <h1> {{book.title}} </h1>
+        <p> Prix: {{book.price}} € </p>
+        <p> Catégories : </p>
+
+        <nav>
+        {% for category in book.categories %}
+            <a href="{{ path('app_front_category_display', {id: category.id} )}}">{{category.name}}</a>
+        {% endfor %}
+        </nav>    
+    </div>
+
+    <hr/>         
+
+     {% endfor %} 
+
+
+{% endblock %}

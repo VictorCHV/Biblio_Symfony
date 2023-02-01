@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page Liste des auteurs{% endblock %}
+
+{% block body %}
+    <h1> Liste des auteurs </h1>
+    <nav>
+    <a href="{{ path('app_author_create') }}"> Ajouter un auteur</a>
+    </nav>
+
+    <hr />
+        {{ form(form)}}
+    <hr />
+
+
+    {% for author in authors %}
+        <div>
+            <h3> {{ author.name }}</h3>
+            <p> {{ author.description }}</p>
+            
+            {% if author.imageUrl %}
+            <p>
+            <img src="{{ author.imageUrl }}" alt="{{ author.name }}" />
+            </p>    
+            {% endif %}
+            
+
+            <a href="{{ path('app_author_remove' , {id: author.id})}}"> Supprimer</a>
+            <a href="{{ path('app_author_updateForm' , {id: author.id})}}"> Modifier</a>
+        </div>
+    {% endfor %}
+{% endblock %}
