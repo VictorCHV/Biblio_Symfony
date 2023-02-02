@@ -2,14 +2,16 @@
 
 namespace App\Controller;
 
+use App\Form\ProfilType;
 use App\Form\RegistrationType;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SecurityController extends AbstractController
 {
@@ -70,10 +72,41 @@ class SecurityController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
+
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
+
+
+    /**
+     * @IsGranted("ROLE_USER")
+     */ 
+    #[Route(path: '/mon-profile', name: 'app_security_myProfile')]
+    public function myProfile(UserRepository $repository, Request $request): Response
+    {
+        //récupération des données de l'utilisateur connecté
+        $user= $this->getUser();
+
+        //création du formulaire
+        $form= $this->createForm(ProfilType::class , $user );
+
+        //remplissage formulaire
+        $form->handleRequest($request);
+
+        //test is form valid & submitted
+        if($form->isSubmitted() && $form->isValid())
+
+        //enregistrement des modifications via le repository
+        $repository->save($user, true);
+
+        //affichage de la page HTML
+        return $this->render('security/myProfile.html.twig', [
+            'form' => $form->createView(),
+        ]);
+
+    }
+
 
 }

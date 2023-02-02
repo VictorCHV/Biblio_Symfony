@@ -12,6 +12,7 @@
     <div>
         <h1> {{book.title}} </h1>
         <p> Prix: {{book.price}} € </p>
+        <p> Dérnière modification {{ book.updatedAt|date('d/m/Y à H:i', 'Europe/Paris') }} </p>
         <p> Catégories : </p>
 
         <nav>
